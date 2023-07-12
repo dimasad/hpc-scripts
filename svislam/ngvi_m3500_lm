@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Activate python virtual environment
+source ~/venv/svislam-devel/bin/activate
+
+# Include generated library in search path
+export LD_LIBRARY_PATH=$HOME/code/svislam/csrc:$LD_LIBRARY_PATH
+
+cd ~/code/svislam/examples
+python ngslam_lm.py @config/ngvi_manhattanOlson3500_lm.run

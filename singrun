@@ -1,0 +1,4 @@
+#!/bin/bash
+
+module load singularity
+singularity exec sing/svislam-devel.sif $@
