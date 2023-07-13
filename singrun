@@ -1,4 +1,6 @@
 #!/bin/bash
 
+SIF_FILE=${SIF_FILE:-~/sing/default.sif}
+
 module load singularity
-singularity exec sing/svislam-devel.sif $@
+singularity exec $SIF_FILE $@
