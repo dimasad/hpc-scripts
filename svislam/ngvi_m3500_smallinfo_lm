@@ -10,4 +10,4 @@ cd ~/code/svislam/examples
 
 OPTS="--redirect_stdout --saveskip=1
       --Nsamp=150 --lrate0_info=0.5 --lrate0=10 --maxiter_cg=600"
-python ngslam_lm.py @config/ngvi_manhattanOlson3500_lm.run $OPTS $@
+python ngslam_lm.py @config/ngvi_m3500_smallinfo_lm.run $OPTS $@
