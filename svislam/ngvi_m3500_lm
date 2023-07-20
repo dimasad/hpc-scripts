@@ -8,6 +8,6 @@ export LD_LIBRARY_PATH=$HOME/code/svislam/csrc:$LD_LIBRARY_PATH
 
 cd ~/code/svislam/examples
 
-OPTS="--redirect_stdout --saveskip=1
-      --Nsamp=150 --lrate0_info=0.5 --lrate0=10 --maxiter_cg=600"
+OPTS="--redirect_stdout --saveskip=1 --Niter=1000000
+      --Nsamp=2000 --lrate0_info=0.5 --lrate0=10 --maxiter_cg=1000"
 python ngslam_lm.py @config/ngvi_manhattanOlson3500_lm.run $OPTS $@
