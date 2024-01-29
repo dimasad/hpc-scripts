@@ -1,9 +1,41 @@
 #!/bin/bash
 
-# Setup python virtual environment
-module load lang/python/cpython_3.10.11_gcc122
-source $HOME/venv/cpy3.10.11/bin/activate
+tf_initial=50
+tf_num=4
+reps=10
 
-# Create directory
+cases="steady-state transient sk-21 sk-51 sk-101"
 
-# Run script
+tf_num=1
+reps=1
+cases="steady-state"
+
+TARGET=duffing-vsi-run
+
+DATADIR=$(date "+$HOME/data/duffing_%F_%Hh%Mm%Ss")
+mkdir -p $DATADIR
+
+for case in cases ; do
+    for i in {1..N} ; do 
+        let "tf = $tf_initial * 2 ** ($i - 1)"
+
+        SUBDIR="$case/tf_$tf"
+        mkdir -p $DATADIR/$SUBDIR
+        cd $DATADIR/$SUBDIR
+
+        for seed in {1..$reps} ;  do
+            if [[ $case == sk-* ]] ; then
+                PROBLEM="smoother-kernel"
+                NWIN=$(echo $case | cut -b 4-)
+            else
+                PROBLEM=$case
+                NWIN=1
+            fi
+
+            OPTS="--tf=$tf --seed=$seed --nwin=$NWIN --problem=$PROBLEM
+                  --output=$seed.pickle"
+            
+            sbatch $TARGET $OPTS $@
+        done
+    done
+done
