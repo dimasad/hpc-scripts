@@ -23,26 +23,28 @@ def parse(dir):
                 for rep in entry.glob('*.pickle'):
                     with open(rep, 'rb') as f:
                         try:
-                            data = pickle.load(f)
-                            xsim = data['sim']['x'][::4]
+                            res = pickle.load(f)
+                            xsim = res['sim']['x'][::4]
                             if case.name.startswith('sk-'):
-                                skip = data['args']['nwin'] // 2
+                                skip = res['args']['nwin'] // 2
                                 xsim = xsim[skip:-skip]
-                            qsim = data['sim']['q']
-                            qest = data['decopt']['q']
-                            xest = data['vopt']['xbar']
+                            qsim = res['sim']['q']
+                            qest = res['decopt']['q']
+                            xest = res['vopt']['xbar']
                             qerr.append(np.abs(qsim - qest))
                             xerr.append(np.abs(xsim - xest).mean(0))
-                            time.append(abs(data['time_elapsed']))
+                            time.append(abs(res['time_elapsed']))
                         except Exception as e:
                             no_result.append(rep)
                             print(rep, e)
                 data[case.name].append(
-                    tf=tf,
-                    time=time,
-                    qerr=qerr,
-                    xerr=xerr,
-                    no_result=no_result,
+                    dict(
+                        tf=tf,
+                        time=time,
+                        qerr=qerr,
+                        xerr=xerr,
+                        no_result=no_result,
+                    )
                 )
     return data
 
@@ -61,9 +63,17 @@ if __name__ == '__main__':
     for k, v in data.items():
         with open(args.dir / (k + '.txt'), 'w') as f:
             for entry in v:
-                f.write(
-                    entry.tf,
-                    entry.time.min(), entry.time.mean(), entry.time.max(),
-                    *entry.qerr.min(0), *entry.qerr.mean(0), *entry.qerr.max(0),
-                    *entry.xerr.min(0), *entry.xerr.mean(0), *entry.xerr.max(0),
+                time = np.array(entry['time'])
+                xerr = np.array(entry['xerr'])
+                qerr = np.array(entry['qerr'])
+                
+                if time.size == 0:
+                    continue
+
+                print(
+                    entry['tf'],
+                    time.min(), time.mean(), time.max(),
+                    *qerr.min(0), *qerr.mean(0), *qerr.max(0),
+                    *xerr.min(0), *xerr.mean(0), *xerr.max(0),
+                    file=f
                 )

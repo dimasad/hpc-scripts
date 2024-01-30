@@ -1,8 +1,9 @@
 #!/bin/bash
 
 tf_initial=50
-tf_num=6
-reps=20
+tf_num=10
+tf_base=1.26
+reps=25
 
 cases="steady-state transient sk-21 sk-51 sk-101 sk-201"
 
@@ -14,7 +15,7 @@ mkdir -p $DATADIR
 
 for case in $cases ; do
     for (( i=0 ; i<$tf_num ; i++ )); do 
-        let "tf = $tf_initial * 2 ** $i"
+        tf=$(bc <<< "$tf_base^$i*$tf_initial")
 
         SUBDIR="$case/tf_$tf"
         mkdir -p $DATADIR/$SUBDIR
