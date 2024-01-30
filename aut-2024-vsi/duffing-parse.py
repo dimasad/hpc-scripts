@@ -12,15 +12,15 @@ if __name__ == '__main__':
         with open( case.name + ".txt", "w") as outfile:
             entries = case.glob('tf_*')
             for entry in entries:
-                try:
-                    tf = float(entry.name[3:])
-                    time = []
-                    qerr = []
-                    qsyserr = []
-                    x0err = []
-                    x1err = []
-                    for rep in entry.glob('*.pickle'):
-                        with open(rep, 'rb') as f:
+                tf = float(entry.name[3:])
+                time = []
+                qerr = []
+                qsyserr = []
+                x0err = []
+                x1err = []
+                for rep in entry.glob('*.pickle'):
+                    with open(rep, 'rb') as f:
+                        try:
                             data = pickle.load(f)
                             xsim = data['sim']['x'][::4]
                             if case.name.startswith('sk-'):
@@ -34,7 +34,9 @@ if __name__ == '__main__':
                             x0err.append(np.abs(xsim[:,0] - xest[:,0]).mean())
                             x1err.append(np.abs(xsim[:,1] - xest[:,1]).mean())
                             time.append(abs(data['time_elapsed']))
-
+                        except Exception as e:
+                            print(rep, e)
+                    
                     print(
                         tf,
                         np.min(time), np.mean(time), np.max(time), 
@@ -44,5 +46,3 @@ if __name__ == '__main__':
                         np.min(x1err), np.mean(x1err), np.max(x1err),
                         file=outfile
                     )
-                except Exception as e:
-                    print(case, e)
