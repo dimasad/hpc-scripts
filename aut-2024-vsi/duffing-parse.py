@@ -7,7 +7,7 @@ import numpy as np
 
 
 if __name__ == '__main__':
-    cases = pathlib.Path('.').glob('*')
+    cases = filter(pathlib.Path.is_dir, pathlib.Path('.').glob('*'))
     for case in cases:
         with open( case.name + ".txt", "w") as outfile:
             entries = case.glob('tf_*')
