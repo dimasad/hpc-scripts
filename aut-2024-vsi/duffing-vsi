@@ -1,10 +1,10 @@
 #!/bin/bash
 
 tf_initial=50
-tf_num=4
-reps=10
+tf_num=6
+reps=20
 
-cases="steady-state transient sk-21 sk-51 sk-101"
+cases="steady-state transient sk-21 sk-51 sk-101 sk-201"
 
 BASEOPTS="--jax-x64 --jax-platform=cpu --optimizer=deterministic"
 TARGET="sbatch duffing-vsi-run"
