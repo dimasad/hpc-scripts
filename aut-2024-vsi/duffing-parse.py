@@ -24,8 +24,8 @@ if __name__ == '__main__':
                             data = pickle.load(f)
                             xsim = data['sim']['x'][::4]
                             if case.name.startswith('sk-'):
-                                nwin = data['args']['nwin']
-                                xsim = xsim[nwin:-nwin]
+                                skip = data['args']['nwin'] // 2
+                                xsim = xsim[skip:-skip]
                             qsim = data['sim']['q']
                             qest = data['decopt']['q']
                             xest = data['vopt']['xbar']
@@ -45,4 +45,4 @@ if __name__ == '__main__':
                         file=outfile
                     )
                 except Exception as e:
-                    print(e)
+                    print(case, e)
