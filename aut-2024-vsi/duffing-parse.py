@@ -33,7 +33,7 @@ if __name__ == '__main__':
                             qsyserr.append(np.abs(qsim - qest)[:-2].mean())
                             x0err.append(np.abs(xsim[:,0] - xest[:,0]).mean())
                             x1err.append(np.abs(xsim[:,1] - xest[:,1]).mean())
-                            time.append(data['time_elapsed'])
+                            time.append(abs(data['time_elapsed']))
 
                     print(
                         tf,
