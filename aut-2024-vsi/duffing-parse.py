@@ -6,7 +6,7 @@ import pickle
 import numpy as np
 
 
-def main():
+if __name__ == '__main__':
     cases = pathlib.Path('.').glob('*')
     for case in cases:
         with open( case.name + ".txt", "w") as outfile:
