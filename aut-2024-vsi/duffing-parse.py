@@ -36,15 +36,15 @@ if __name__ == '__main__':
                             time.append(abs(data['time_elapsed']))
                         except Exception as e:
                             print(rep, e)
-                    try:
-                        print(
-                            tf,
-                            np.min(time), np.mean(time), np.max(time), 
-                            np.min(qerr), np.mean(qerr), np.max(qerr),
-                            np.min(qsyserr), np.mean(qsyserr), np.max(qsyserr),
-                            np.min(x0err), np.mean(x0err), np.max(x0err),
-                            np.min(x1err), np.mean(x1err), np.max(x1err),
-                            file=outfile
-                        )
-                    except:
-                        pass
+                try:
+                    print(
+                        tf,
+                        np.min(time), np.mean(time), np.max(time), 
+                        np.min(qerr), np.mean(qerr), np.max(qerr),
+                        np.min(qsyserr), np.mean(qsyserr), np.max(qsyserr),
+                        np.min(x0err), np.mean(x0err), np.max(x0err),
+                        np.min(x1err), np.mean(x1err), np.max(x1err),
+                        file=outfile
+                    )
+                except:
+                    pass
