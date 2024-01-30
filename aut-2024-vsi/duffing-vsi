@@ -6,10 +6,6 @@ reps=10
 
 cases="steady-state transient sk-21 sk-51 sk-101"
 
-tf_num=1
-reps=1
-cases="steady-state"
-
 BASEOPTS="--jax-x64 --jax-platform=cpu --optimizer=deterministic"
 TARGET="sbatch duffing-vsi-run"
 
