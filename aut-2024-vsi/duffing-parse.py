@@ -14,12 +14,12 @@ if __name__ == '__main__':
             for entry in entries:
                 try:
                     tf = float(entry.name[3:])
+                    time = []
+                    qerr = []
+                    qsyserr = []
+                    x0err = []
+                    x1err = []
                     for rep in entry.glob('*.pickle'):
-                        time = []
-                        qerr = []
-                        qsyserr = []
-                        x0err = []
-                        x1err = []
                         with open(rep, 'rb') as f:
                             data = pickle.load(f)
                             xsim = data['sim']['x'][::4]
