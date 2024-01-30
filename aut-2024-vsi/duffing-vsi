@@ -10,7 +10,7 @@ tf_num=1
 reps=1
 cases="steady-state"
 
-BASEOPTS="--jax-x64 --jax-platform=cpu"
+BASEOPTS="--jax-x64 --jax-platform=cpu --optimizer=deterministic"
 TARGET="sbatch duffing-vsi-run"
 
 DATADIR=$(date "+$HOME/data/duffing_%F_%Hh%Mm%Ss")
