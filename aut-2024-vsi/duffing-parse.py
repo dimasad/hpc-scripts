@@ -62,6 +62,14 @@ if __name__ == '__main__':
     # Write text data    
     for k, v in data.items():
         with open(args.dir / (k + '.txt'), 'w') as f:
+            print(
+                "tf t_min t_med t_max "
+                "a_min b_min d_min g_min logstdw_min logstdv_min " 
+                "a_med b_med d_med g_med logstdw_med logstdv_med "
+                "a_max b_max d_max g_max logstdw_max logstdv_max "
+                "x0_min x1_min x0_med x1_med x0_max x1_max", file=f
+            )
+
             for entry in v:
                 time = np.array(entry['time'])
                 xerr = np.array(entry['xerr'])
