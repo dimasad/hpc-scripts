@@ -51,17 +51,18 @@ def parse(dir):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir', type=pathlib.Path, default=pathlib.Path('.'))
+    parser.add_argument('--prefix', type=str, default="")
     args = parser.parse_args()
 
     data = parse(args.dir)
 
     # Write binary data
-    with open(args.dir / 'data.pickle', 'wb') as f:
+    with open(args.dir / (args.prefix + 'pickle'), 'wb') as f:
         pickle.dump(data, f)
     
     # Write text data    
     for k, v in data.items():
-        with open(args.dir / (k + '.txt'), 'w') as f:
+        with open(args.dir / (args.prefix + k + '.txt'), 'w') as f:
             print(
                 "tf t_min t_med t_max "
                 "a_min b_min d_min g_min logstdw_min logstdv_min " 
