@@ -7,4 +7,4 @@ source $HOME/venv/cpy3.10.11/bin/activate
 TARGET="$HOME/code/gvispe/examples/duffing.py"
 
 # Run script
-python $TARGET $@
+python -u $TARGET $@

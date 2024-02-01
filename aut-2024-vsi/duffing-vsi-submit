@@ -1,9 +1,10 @@
 #!/bin/bash
 
 tf_initial=50
-tf_num=10
-tf_base=1.26
-reps=25
+tf_num=3
+tf_base=2
+reps=100
+transient_cutoff=100
 
 cases="steady-state transient sk-21 sk-51 sk-101 sk-201"
 
@@ -16,6 +17,12 @@ mkdir -p $DATADIR
 for case in $cases ; do
     for (( i=0 ; i<$tf_num ; i++ )); do 
         tf=$(bc <<< "$tf_base^$i*$tf_initial")
+
+        if [ "$case" == "transient" ]; then
+            if (( tf > transient_cutoff )); then
+                continue
+            fi
+        fi
 
         SUBDIR="$case/tf_$tf"
         mkdir -p $DATADIR/$SUBDIR
@@ -31,7 +38,7 @@ for case in $cases ; do
             fi
 
             OPTS="--tf=$tf --seedsim=$seedsim --nwin=$NWIN --problem=$PROBLEM
-                  --output=$seedsim.pickle"
+                  --pickleout=$seedsim.pickle --txtout=$seedsim.txt"
             
             $TARGET $BASEOPTS $OPTS $@
         done
