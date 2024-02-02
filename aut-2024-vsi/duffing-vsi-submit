@@ -1,15 +1,15 @@
 #!/bin/bash
 
 tf_initial=50
-tf_num=3
+tf_num=5
 tf_base=2
-reps=100
+reps=200
 transient_cutoff=100
 
 cases="steady-state transient sk-21 sk-51 sk-101 sk-201"
 
 BASEOPTS="--jax-x64 --jax-platform=cpu --optimizer=deterministic"
-TARGET="sbatch duffing-vsi-run"
+SCRIPT="duffing-vsi-run"
 
 DATADIR=$(date "+$HOME/data/duffing_%F_%Hh%Mm%Ss")
 mkdir -p $DATADIR
@@ -40,7 +40,8 @@ for case in $cases ; do
             OPTS="--tf=$tf --seedsim=$seedsim --nwin=$NWIN --problem=$PROBLEM
                   --pickleout=$seedsim.pickle --txtout=$seedsim.txt"
             
-            $TARGET $BASEOPTS $OPTS $@
+            SBATCH_OPTS="--output=$seedsim.out --job-name=$case-$tf-$seedsim"
+            sbatch $SBATCH_OPTS $SCRIPT $BASEOPTS $OPTS $@
         done
     done
 done
