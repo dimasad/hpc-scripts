@@ -40,7 +40,8 @@ for case in $cases ; do
             OPTS="--tf=$tf --seedsim=$seedsim --nwin=$NWIN --problem=$PROBLEM
                   --pickleout=$seedsim.pickle --txtout=$seedsim.txt"
             
-            SBATCH_OPTS="--output=$seedsim.out --job-name=$case-$tf-$seedsim"
+            SBATCH_OPTS="--output=$seedsim.out --job-name=$case-$tf-$seedsim
+                         -p comm_small_day"
             sbatch $SBATCH_OPTS $SCRIPT $BASEOPTS $OPTS $@
         done
     done
