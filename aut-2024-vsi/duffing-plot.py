@@ -59,9 +59,13 @@ if __name__ == '__main__':
             ax.set_xscale('log')
             ax.set_yscale('log')
             ax.legend()
-    
+
+    cat_labels = [
+        *[f"{l}_med" for l in entry_labels],
+        *[f"{l}_low" for l in entry_labels],
+        *[f"{l}_high" for l in entry_labels],
+        *[f"{l}_mean" for l in entry_labels],
+    ]
     for case in data:
-        np.savetxt(case+"-low.plot", low[case], header=" ".join(entry_labels))
-        np.savetxt(case+"-high.plot", high[case], header=" ".join(entry_labels))
-        np.savetxt(case+"-med.plot", med[case], header=" ".join(entry_labels))
-        np.savetxt(case+"-mean.plot", mean[case], header=" ".join(entry_labels))
+        a = np.c_[med[case], low[case], high[case], mean[case]]
+        np.savetxt(f"{case}.plot", a, header=" ".join(cat_labels), comments='')
