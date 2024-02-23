@@ -4,12 +4,13 @@
 NX_BASE=5
 NU_BASE=2
 NY_BASE=2
-MUL_END=8
+MUL_END=4
 REPS=10
+LRATE_BASE="0.1"
 
 # Parameters of the job run script
 BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
-BASESBATCHOPTS="-p standby"
+BASESBATCHOPTS="-p comm_small_day"
 SCRIPT="linsys-vsi-run"
 
 # Create directories
@@ -29,11 +30,12 @@ for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do
     NX=$(( NX_BASE*MUL ))
     NY=$(( NY_BASE*MUL ))
     NU=$(( NU_BASE*MUL ))
+    LRATE=$(bc -l <<< "$LRATE_BASE / $MUL^2")
 
     for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
-        ID=$MUL-$SEED
+        ID="$MUL-$SEED"
 
-        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED
+        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE
               --savemat=$SCRATCHDIR/$ID.mat --txtout=$ID.txt"
         
         SBATCHOPTS="--job-name=$ID"
