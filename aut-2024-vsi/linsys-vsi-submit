@@ -36,7 +36,7 @@ for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do
         OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED
               --savemat=$SCRATCHDIR/$ID.mat --txtout=$ID.txt"
         
-        SBATCHOPTS="--output=$ID.%j.out --job-name=$ID"
+        SBATCHOPTS="--job-name=$ID"
         sbatch $SBATCHOPTS $BASESBATCHOPTS $SCRIPT $BASEOPTS $OPTS
     done
 done
