@@ -30,12 +30,12 @@ for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do
     NX=$(( NX_BASE*MUL ))
     NY=$(( NY_BASE*MUL ))
     NU=$(( NU_BASE*MUL ))
-    LRATE=$(bc -l <<< "$LRATE_BASE / $MUL^2")
+    LRATE0=$(bc -l <<< "$LRATE_BASE / $MUL^2")
 
     for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
         ID="$MUL-$SEED"
 
-        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE
+        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0
               --savemat=$SCRATCHDIR/$ID.mat --txtout=$ID.txt"
         
         SBATCHOPTS="--job-name=$ID"

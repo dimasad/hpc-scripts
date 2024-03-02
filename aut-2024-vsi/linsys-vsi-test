@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Job submission parameters
+NX=5
+NU=2
+NY=2
+REPS=10
+LRATE0=0.1
+
+# Parameters of the job run script
+BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
+BASESBATCHOPTS="-p comm_small_day"
+SCRIPT="linsys-vsi-run"
+
+# Create directories
+DIRNAME=$(date "+linsys_test_%F_%Hh%Mm%Ss")
+DATADIR="$HOME/data/$DIRNAME"
+SCRATCHDIR="$HOME/scratch/data/$DIRNAME"
+mkdir -p $DATADIR
+mkdir -p $SCRATCHDIR
+
+# Change to the data directory
+cd $DATADIR
+
+for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
+    ID="$MUL-$SEED"
+
+    OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0
+            --txtout=$ID.txt"
+    
+    SBATCHOPTS="--job-name=$ID"
+    sbatch $SBATCHOPTS $BASESBATCHOPTS $SCRIPT $BASEOPTS $OPTS
+done
