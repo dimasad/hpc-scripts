@@ -4,7 +4,7 @@
 module load lang/python/cpython_3.10.11_gcc122
 source $HOME/venv/cpy3.10.11/bin/activate
 
-TARGET="$HOME/code/gvispe/examples/duffing.py"
+TARGET="$HOME/code/visid/examples/duffing.py"
 
 # Run script
 python -u $TARGET $@

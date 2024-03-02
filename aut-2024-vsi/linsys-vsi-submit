@@ -6,7 +6,7 @@ NU_BASE=2
 NY_BASE=2
 MUL_END=4
 REPS=10
-LRATE_BASE="0.1"
+LRATE_BASE=0.1
 
 # Parameters of the job run script
 BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
@@ -35,8 +35,9 @@ for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do
     for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
         ID="$MUL-$SEED"
 
-        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0
-              --savemat=$SCRATCHDIR/$ID.mat --txtout=$ID.txt"
+        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0 
+              --savemat=$SCRATCHDIR/$ID.mat --pickleout=$SCRATCHDIR/$ID.pickle
+              --txtout=$ID.txt"
         
         SBATCHOPTS="--job-name=$ID"
         sbatch $SBATCHOPTS $BASESBATCHOPTS $SCRIPT $BASEOPTS $OPTS
