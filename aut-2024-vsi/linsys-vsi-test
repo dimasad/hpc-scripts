@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Job submission parameters
-let NX=5*4
-let NU=2*4
-let NY=2*4
+let NX=20
+let NU=10
+let NY=10
 REPS=3
-LRATE0=1e-2
+LRATE0=5e-3
+TRANSITION_STEPS=2000
 
 # Parameters of the job run script
 BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
@@ -26,6 +27,7 @@ for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
     ID="$SEED"
 
     OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0
+          --transition_steps=$TRANSITION_STEPS
           --pickleout=$SCRATCHDIR/$ID.pickle --txtout=$ID.txt"
     
     SBATCHOPTS="--job-name=$ID"
