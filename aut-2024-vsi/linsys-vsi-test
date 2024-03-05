@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Job submission parameters
-let NX=20
-let NU=8
-let NY=8
+let NX=40
+let NU=16
+let NY=16
 REPS=4
-LRATE0=5e-3
+LRATE0=2.5e-3
 TRANSITION_STEPS=2000
 MAX_POLE_RADIUS=0.95
 
@@ -21,8 +21,9 @@ SCRATCHDIR="$HOME/scratch/data/$DIRNAME"
 mkdir -p $DATADIR
 mkdir -p $SCRATCHDIR
 
-# Change to the data directory
+# Change to the data directory and display
 cd $DATADIR
+echo Result dir: $DIRNAME
 
 for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
     ID="$SEED"

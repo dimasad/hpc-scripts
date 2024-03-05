@@ -4,9 +4,11 @@
 NX_BASE=5
 NU_BASE=2
 NY_BASE=2
-MUL_END=4
+MUL_END=8
 REPS=10
-LRATE_BASE=0.1
+LRATE_BASE=0.02
+TRANSITION_STEPS=2000
+MAX_POLE_RADIUS=0.95
 
 # Parameters of the job run script
 BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
@@ -22,6 +24,7 @@ mkdir -p $SCRATCHDIR
 
 # Change to the data directory
 cd $DATADIR
+echo Result dir: $DIRNAME
 
 # Iterate over the cases
 for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do 
@@ -30,12 +33,14 @@ for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do
     NX=$(( NX_BASE*MUL ))
     NY=$(( NY_BASE*MUL ))
     NU=$(( NU_BASE*MUL ))
-    LRATE0=$(bc -l <<< "$LRATE_BASE / $MUL^2")
+    LRATE0=$(bc -l <<< "$LRATE_BASE / $MUL")
 
     for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
         ID="$MUL-$SEED"
 
-        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0 
+        OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0
+              --max_pole_radius=$MAX_POLE_RADIUS 
+              --transition_steps=$TRANSITION_STEPS
               --savemat=$SCRATCHDIR/$ID.mat --pickleout=$SCRATCHDIR/$ID.pickle
               --txtout=$ID.txt"
         
