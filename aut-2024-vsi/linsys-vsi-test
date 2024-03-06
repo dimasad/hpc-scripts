@@ -5,13 +5,13 @@ let NX=40
 let NU=16
 let NY=16
 REPS=4
-LRATE0=2.5e-3
+LRATE0=5e-3
 TRANSITION_STEPS=2000
 MAX_POLE_RADIUS=0.95
 
 # Parameters of the job run script
 BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
-BASESBATCHOPTS="-p comm_small_day"
+BASESBATCHOPTS="-p comm_gpu_inter -G 1"
 SCRIPT="linsys-vsi-run"
 
 # Create directories
