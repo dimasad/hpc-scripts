@@ -1,17 +1,20 @@
 #!/bin/bash
 
-# Job submission parameters
-let NX=40
-let NU=16
-let NY=16
+# Target script parameters
+let NX=80
+let NU=64
+let NY=64
 REPS=4
 LRATE0=5e-3
-TRANSITION_STEPS=2000
+TRANSITION_STEPS=8000
 MAX_POLE_RADIUS=0.95
 
+# SLURM parameters
+export SBATCH_GPUS=1
+export SBATCH_PARTITION=comm_gpu_inter
+
 # Parameters of the job run script
-BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
-BASESBATCHOPTS="-p comm_gpu_inter -G 1"
+BASEOPTS="--N=1000 --Nbatch=10000 --epochs=20"
 SCRIPT="linsys-vsi-run"
 
 # Create directories
@@ -27,12 +30,12 @@ echo Result dir: $DIRNAME
 
 for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
     ID="$SEED"
+    export SBATCH_JOB_NAME=$ID
 
     OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED
           --max_pole_radius=$MAX_POLE_RADIUS
           --transition_steps=$TRANSITION_STEPS --lrate0=$LRATE0
           --pickleout=$SCRATCHDIR/$ID.pickle --txtout=$ID.txt"
     
-    SBATCHOPTS="--job-name=$ID"
-    sbatch $SBATCHOPTS $BASESBATCHOPTS $SCRIPT $BASEOPTS $OPTS
+    sbatch $SCRIPT $BASEOPTS $OPTS
 done
