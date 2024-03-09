@@ -21,6 +21,8 @@ DATADIR="$HOME/data/$DIRNAME"
 SCRATCHDIR="$HOME/scratch/data/$DIRNAME"
 mkdir -p $DATADIR
 mkdir -p $SCRATCHDIR
+cp $0 $DATADIR/
+cp $0 $SCRATCHDIR/
 
 # Change to the data directory
 cd $DATADIR
