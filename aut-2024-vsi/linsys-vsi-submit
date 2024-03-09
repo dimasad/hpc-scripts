@@ -6,13 +6,16 @@ NU_BASE=2
 NY_BASE=2
 MUL_END=16
 REPS=10
-LRATE0=0.005
-TRANSITION_STEPS=2000
+LRATE0=0.0025
+TRANSITION_STEPS=3500
 MAX_POLE_RADIUS=0.95
 
+# SLURM parameters
+export SBATCH_GPUS=1
+export SBATCH_PARTITION=comm_gpu_inter
+
 # Parameters of the job run script
-BASEOPTS="--N=1000 --Nbatch=1000 --epochs=50"
-BASESBATCHOPTS="-p comm_gpu_inter -G 1"
+BASEOPTS="--N=10000 --Nbatch=1000 --epochs=75"
 SCRIPT="linsys-vsi-run"
 
 # Create directories
@@ -38,14 +41,18 @@ for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do
 
     for (( SEED=0 ; SEED<$REPS ; SEED++ )) ;  do
         ID="$MUL-$SEED"
+        export SBATCH_JOB_NAME=$ID
 
         OPTS="--nx=$NX --nu=$NU --ny=$NY --seed=$SEED --lrate0=$LRATE0
               --max_pole_radius=$MAX_POLE_RADIUS 
               --transition_steps=$TRANSITION_STEPS
               --savemat=$SCRATCHDIR/$ID.mat --pickleout=$SCRATCHDIR/$ID.pickle
-              --txtout=$ID.txt"
-        
-        SBATCHOPTS="--job-name=$ID"
-        sbatch $SBATCHOPTS $BASESBATCHOPTS $SCRIPT $BASEOPTS $OPTS
+              --txtout=$ID.txt
+              $BASEOPTS"
+        sbatch $SCRIPT $OPTS
+
+        # Save job command-line
+        SBATCHENV=$(env | grep SBATCH_)
+        echo $SBATCHENV sbatch $SCRIPT $OPTS >> $ID.cmdline
     done
 done
