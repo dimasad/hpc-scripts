@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Job submission parameters
+NX_BASE=5
+NU_BASE=2
+NY_BASE=2
+MUL_END=8
+REPS=10
+
+# SLURM parameters
+export SBATCH_GPUS=1
+export SBATCH_PARTITION=comm_gpu_inter
+
+# Parameters of the job run script
+BASEOPTS="--N=10000 --jax-platform=cpu"
+SCRIPT="linsys-timeit-run"
+
+# Create directories
+DIRNAME=$(date "+linsys_timeit_%F_%Hh%Mm%Ss")
+DATADIR="$HOME/data/$DIRNAME"
+mkdir -p $DATADIR
+cp $0 $DATADIR/
+
+# Change to the data directory
+cd $DATADIR
+echo Result dir: $DIRNAME
+
+# Iterate over the cases
+for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do 
+
+    # Determine model dimensions
+    NX=$(( NX_BASE*MUL ))
+    NY=$(( NY_BASE*MUL ))
+    NU=$(( NU_BASE*MUL ))
+
+    ID="$MUL"
+    export SBATCH_JOB_NAME=$ID
+
+    OPTS="--nx=$NX --nu=$NU --ny=$NY --txtout=$ID.txt
+            $BASEOPTS"
+    sbatch $SCRIPT $OPTS
+
+    # Save job command-line
+    SBATCHENV=$(env | grep SBATCH_)
+    echo $SBATCHENV sbatch $SCRIPT $OPTS >> $ID.cmdline
+done
