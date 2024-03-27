@@ -7,12 +7,12 @@ NY_BASE=2
 MUL_END=8
 REPS=10
 
-# SLURM parameters
-export SBATCH_GPUS=1
-export SBATCH_PARTITION=comm_gpu_inter
+DIMENSIONS=(
+    "--nx=10 --nu=4 --ny=4"
+    "--nx=40 --nu=16 --ny=16"
+)
 
 # Parameters of the job run script
-BASEOPTS="--N=10000 --jax-platform=cpu"
 SCRIPT="linsys-timeit-run"
 
 # Create directories
@@ -23,24 +23,34 @@ cp $0 $DATADIR/
 
 # Change to the data directory
 cd $DATADIR
-echo Result dir: $DIRNAME
+echo Result dir: $DATADIR
 
 # Iterate over the cases
-for (( MUL=1 ; MUL<=MUL_END ; MUL=MUL*2 )); do 
+for ((I=0; I<${#DIMENSIONS[@]}; I++)) do
+    DIM=${DIMENSIONS[$I]}
+    for ((N=500; N<=15000; N=$(bc <<< "$N*1.5/1"))); do 
+        # Run script on GPU
+        ID="$I-$N-gpu"
+        export SBATCH_JOB_NAME=$ID
+        export SBATCH_GPUS=1
+        export SBATCH_PARTITION=comm_gpu_inter
+        OPTS="$DIM --N=$N --txtout=$ID.txt --jax-platform=gpu"
+        sbatch $SCRIPT $OPTS
 
-    # Determine model dimensions
-    NX=$(( NX_BASE*MUL ))
-    NY=$(( NY_BASE*MUL ))
-    NU=$(( NU_BASE*MUL ))
+        # Save job command-line
+        SBATCHENV=$(env | grep SBATCH_)
+        echo $SBATCHENV sbatch $SCRIPT $OPTS >> $ID.cmdline        
 
-    ID="$MUL"
-    export SBATCH_JOB_NAME=$ID
+        # Run script on CPU
+        ID="$I-$N-cpu"
+        export SBATCH_JOB_NAME=$ID
+        export SBATCH_GPUS=0
+        export SBATCH_PARTITION=comm_small_day
+        OPTS="$DIM --N=$N --txtout=$ID.txt --jax-platform=cpu"
+        sbatch $SCRIPT $OPTS
 
-    OPTS="--nx=$NX --nu=$NU --ny=$NY --txtout=$ID.txt
-            $BASEOPTS"
-    sbatch $SCRIPT $OPTS
-
-    # Save job command-line
-    SBATCHENV=$(env | grep SBATCH_)
-    echo $SBATCHENV sbatch $SCRIPT $OPTS >> $ID.cmdline
+        # Save job command-line
+        SBATCHENV=$(env | grep SBATCH_)
+        echo $SBATCHENV sbatch $SCRIPT $OPTS >> $ID.cmdline        
+    done
 done
